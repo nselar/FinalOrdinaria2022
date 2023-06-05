@@ -1,4 +1,4 @@
-# FInalOrdinaria2022
+ FInalOrdinaria2022
 Se pide realizar una aplicación web que muestre los personajes de Rick y Morty y que incluya la siguiente
 funcionalidad (se puede elegir usar API Rest o GraphQL)
 ● Paginación (2 puntos)

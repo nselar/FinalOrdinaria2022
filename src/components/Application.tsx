@@ -37,14 +37,16 @@ const Application : FC = () => {
     const [characters, setCharacters] = useState<Character[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
-    const [filter, setFilter] = useState<string>('');
-    const [search, setSearch] = useState<string>('');
+    const [GenderFilter, setGenderFilter] = useState("");
+    const [StatusFilter, setStatusFilter] = useState("");
+    const [search, setSearch] = useState("");
 
     const { loading, error, data } = useQuery(GET_CHARACTERS, {
         variables: {
             page: currentPage,
             filter: {
-                status: filter,
+                status: StatusFilter,
+                gender: GenderFilter,
                 name: search
             },
             
@@ -56,10 +58,14 @@ const Application : FC = () => {
             setCharacters(data.characters.results);
             setTotalPages(data.characters.info.pages);
         }
-    }, [data]);
+    }, [data]); // este array es para que se ejecute solo una vez
 
-    const handleFilter = (filter: string) => {
-        setFilter(filter);
+    const handleGenderFilter = (filter: string) => {
+        setGenderFilter(filter);
+    };
+
+    const handleStatusFilter = (filter: string) => {
+        setStatusFilter(filter);
     };
 
     const handleSearch = (search: string) => {
@@ -74,14 +80,15 @@ const Application : FC = () => {
         setCurrentPage(currentPage - 1);
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <Spinner />;
     if (error) return <p>Error :(</p>;
 
     return (
         <>
             <title>Rick and Morty API</title>
             <Search onSearch={handleSearch} />
-            <Filter onFilter={handleFilter} />
+            <Filter onFilter={handleStatusFilter} />
+            <Filter onFilter={handleGenderFilter} />
             {characters.length > 0 && (
                 <Pagination
                     currentPage={currentPage}
@@ -109,3 +116,23 @@ const StyledP = styled.p`
     font-weight: bold;
     text-align: center;
 `;
+
+const Spinner = styled.div`
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #16d47b;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+    margin-top: 2rem;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg)
+        }
+    }
+`;
+
